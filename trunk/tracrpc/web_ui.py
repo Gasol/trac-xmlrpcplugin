@@ -11,14 +11,13 @@ from types import GeneratorType
 
 from pkg_resources import resource_filename
 
-from genshi.builder import tag
-from genshi.template.base import TemplateSyntaxError, BadDirectiveError
-from genshi.template.text import TextTemplate
+from jinja2 import TemplateError
 
 from trac.core import *
 from trac.perm import PermissionError
 from trac.resource import ResourceNotFound
-from trac.util.text import to_unicode
+from trac.util.html import tag
+from trac.util.text import jinja2template, to_unicode
 from trac.util.translation import _
 from trac.web.api import RequestDone, HTTPUnsupportedMediaType
 from trac.web.main import IRequestHandler
@@ -130,9 +129,9 @@ class RPCWeb(Component):
 
     def _expand_docs(self, docs, ctx):
         try :
-            tmpl = TextTemplate(docs)
-            return tmpl.generate(**dict(ctx.items())).render()
-        except (TemplateSyntaxError, BadDirectiveError), exc:
+            tmpl = jinja2template(docs)
+            return tmpl.render(ctx)
+        except TemplateError as exc:
             self.log.exception("Syntax error rendering protocol documentation")
             return "'''Syntax error:''' [[BR]] %s" % (str(exc),)
         except Exception:
