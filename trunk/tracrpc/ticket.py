@@ -152,8 +152,8 @@ class TicketRPC(Component):
         """ Fetch a ticket. Returns [id, time_created, time_changed, attributes]. """
         t = model.Ticket(self.env, id)
         req.perm(t.resource).require('TICKET_VIEW')
-        t['_ts'] = str(to_utimestamp(t.time_changed))
-        return (t.id, t.time_created, t.time_changed, t.values)
+        t['_ts'] = str(to_utimestamp(t['changetime']))
+        return (t.id, t['time'], t['changetime'], t.values)
 
     def create(self, req, summary, description, attributes={}, notify=False, when=None):
         """ Create a new ticket, returning the ticket ID.
