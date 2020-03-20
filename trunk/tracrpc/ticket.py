@@ -220,7 +220,7 @@ class TicketRPC(Component):
             req.perm(t.resource).require('TICKET_MODIFY')
             time_changed = attributes.pop('_ts', None)
             if time_changed and \
-                    str(time_changed) != str(to_utimestamp(t.time_changed)):
+                    str(time_changed) != str(to_utimestamp(t['changetime'])):
                 raise TracError("Ticket has been updated since last get().")
             for k, v in attributes.iteritems():
                 t[k] = v
@@ -229,7 +229,7 @@ class TicketRPC(Component):
             ts = TicketSystem(self.env)
             tm = TicketModule(self.env)
             # TODO: Deprecate update without time_changed timestamp
-            time_changed = attributes.pop('_ts', to_utimestamp(t.time_changed))
+            time_changed = attributes.pop('_ts', to_utimestamp(t['changetime']))
             try:
                 time_changed = int(time_changed)
             except ValueError:
