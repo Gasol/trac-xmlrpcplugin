@@ -16,7 +16,7 @@ from trac.resource import Resource, ResourceNotFound
 import trac.ticket.model as model
 import trac.ticket.query as query
 from trac.ticket.api import TicketSystem
-from trac.ticket.notification import NotificationEvent, NotificationSystem, TicketChangeEvent
+from trac.ticket.notification import NotificationSystem, TicketChangeEvent
 from trac.ticket.web_ui import TicketModule
 from trac.web.chrome import add_warning
 from trac.util.html import Element, Fragment
@@ -176,7 +176,7 @@ class TicketRPC(Component):
         t.insert(when=when)
         if notify:
             try:
-                event = NotificationEvent('ticket', 'created', t, when, req.authname)
+                event = TicketChangeEvent('created', t, when, req.authname)
                 NotificationSystem(self.env).notify(event)
             except Exception, e:
                 self.log.exception("Failure sending notification on creation "
