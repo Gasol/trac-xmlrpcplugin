@@ -110,8 +110,7 @@ class WikiRPC(Component):
             page.readonly = attributes.get('readonly') and 1 or 0
 
         page.save(attributes.get('author', req.authname),
-                  attributes.get('comment'),
-                  req.remote_addr)
+                  attributes.get('comment', req.remote_addr))
         return True
 
     def listAttachments(self, req, pagename):
